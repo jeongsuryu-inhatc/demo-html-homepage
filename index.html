@@ -146,6 +146,81 @@
         body.dark .info {
             color: #888;
         }
+
+        .contact-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #eee;
+            text-align: left;
+            transition: border-color 0.4s;
+        }
+        body.dark .contact-section {
+            border-top-color: #333;
+        }
+        .contact-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 16px;
+            text-align: center;
+            transition: color 0.4s;
+        }
+        body.dark .contact-title {
+            color: #e0e0e0;
+        }
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            background: #f9f9f9;
+            color: #333;
+            outline: none;
+            transition: border-color 0.2s, background 0.4s, color 0.4s;
+            box-sizing: border-box;
+        }
+        body.dark .contact-form input,
+        body.dark .contact-form textarea {
+            background: #2a2a3e;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: #667eea;
+        }
+        .contact-form textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 11px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .form-message {
+            font-size: 13px;
+            text-align: center;
+            min-height: 18px;
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -166,6 +241,18 @@
             <button class="reset-btn" onclick="resetLotto()">초기화</button>
         </div>
         <div class="info">1부터 45까지의 숫자 중 중복 없이 6개를 선택합니다</div>
+
+        <div class="contact-section">
+            <div class="contact-title">제휴 문의</div>
+            <form class="contact-form" id="contactForm" action="https://formspree.io/f/xbdvoeyg" method="POST">
+                <input type="text" name="name" placeholder="이름" required>
+                <input type="email" name="email" placeholder="이메일" required>
+                <input type="text" name="company" placeholder="회사명 (선택)">
+                <textarea name="message" placeholder="문의 내용을 입력해주세요." required></textarea>
+                <button type="submit" class="submit-btn">문의 보내기</button>
+            </form>
+            <div class="form-message" id="formMessage"></div>
+        </div>
     </div>
 
     <script>
@@ -205,6 +292,36 @@
                 ball.textContent = '-';
             });
         }
+
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+
+        contactForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const submitBtn = contactForm.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '전송 중...';
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    formMessage.textContent = '문의가 성공적으로 접수되었습니다. 감사합니다!';
+                    contactForm.reset();
+                } else {
+                    formMessage.textContent = '전송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+                }
+            } catch {
+                formMessage.textContent = '네트워크 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '문의 보내기';
+            }
+        });
     </script>
 </body>
 </html>
