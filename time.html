@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>현재 시각</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .clock-container {
+            text-align: center;
+        }
+
+        .date {
+            color: #a0a0c0;
+            font-size: 20px;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+
+        .clock {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .time-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-value {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px 32px;
+            font-size: 80px;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 4px;
+            min-width: 160px;
+            text-align: center;
+            text-shadow: 0 0 30px rgba(160, 120, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .time-label {
+            color: #7070a0;
+            font-size: 13px;
+            letter-spacing: 3px;
+            margin-top: 12px;
+            text-transform: uppercase;
+        }
+
+        .separator {
+            font-size: 72px;
+            font-weight: bold;
+            color: rgba(160, 120, 255, 0.5);
+            margin-bottom: 28px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.15; }
+        }
+
+        .ampm {
+            color: #a078ff;
+            font-size: 22px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-top: 8px;
+            margin-left: 16px;
+            align-self: flex-end;
+            padding-bottom: 36px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <div class="date" id="date"></div>
+        <div class="clock">
+            <div class="time-block">
+                <div class="time-value" id="hours"></div>
+                <div class="time-label">시</div>
+            </div>
+            <div class="separator">:</div>
+            <div class="time-block">
+                <div class="time-value" id="minutes"></div>
+                <div class="time-label">분</div>
+            </div>
+            <div class="separator">:</div>
+            <div class="time-block">
+                <div class="time-value" id="seconds"></div>
+                <div class="time-label">초</div>
+            </div>
+            <div class="ampm" id="ampm"></div>
+        </div>
+    </div>
+
+    <script>
+        const DAYS = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+        function pad(n) {
+            return String(n).padStart(2, '0');
+        }
+
+        function updateClock() {
+            const now = new Date();
+
+            const year  = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day   = now.getDate();
+            const dow   = DAYS[now.getDay()];
+
+            const h24   = now.getHours();
+            const min   = now.getMinutes();
+            const sec   = now.getSeconds();
+            const ampm  = h24 < 12 ? 'AM' : 'PM';
+            const h12   = h24 % 12 || 12;
+
+            document.getElementById('date').textContent =
+                `${year}년 ${pad(month)}월 ${pad(day)}일 ${dow}`;
+
+            document.getElementById('hours').textContent   = pad(h12);
+            document.getElementById('minutes').textContent = pad(min);
+            document.getElementById('seconds').textContent = pad(sec);
+            document.getElementById('ampm').textContent    = ampm;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>
