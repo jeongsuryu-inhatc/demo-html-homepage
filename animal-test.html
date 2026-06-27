@@ -22,11 +22,7 @@
             margin-bottom: 32px;
         }
 
-        .hero-emoji {
-            font-size: 64px;
-            line-height: 1;
-            margin-bottom: 12px;
-        }
+        .hero-emoji { font-size: 64px; line-height: 1; margin-bottom: 12px; }
 
         .hero h1 {
             font-size: 36px;
@@ -50,50 +46,58 @@
             max-width: 480px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.12);
             text-align: center;
-        }
-
-        /* ── 시작 전 상태 ── */
-        #startView { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-
-        .animal-icons {
             display: flex;
-            gap: 32px;
-            font-size: 72px;
-            line-height: 1;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
         }
 
-        .start-desc {
-            font-size: 15px;
-            color: #888;
-            line-height: 1.7;
-        }
-
-        .btn-start {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 14px 48px;
-            border: none;
-            border-radius: 50px;
+        /* 업로드 영역 */
+        .upload-area {
+            width: 100%;
+            border: 2.5px dashed #f4a06a;
+            border-radius: 16px;
+            padding: 36px 20px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255,107,107,0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: background 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
-        .btn-start:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 28px rgba(255,107,107,0.5);
+        .upload-area:hover, .upload-area.drag-over {
+            background: #fff5ee;
+            border-color: #ff6b6b;
         }
 
-        /* ── 분석 중 상태 ── */
-        #analyzeView { display: none; flex-direction: column; align-items: center; gap: 20px; }
+        .upload-icon { font-size: 48px; line-height: 1; }
 
-        #webcam-container canvas {
+        .upload-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .upload-sub {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        #fileInput { display: none; }
+
+        /* 미리보기 */
+        #previewSection { display: none; width: 100%; flex-direction: column; align-items: center; gap: 20px; }
+
+        #previewImg {
+            width: 280px;
+            height: 280px;
+            object-fit: cover;
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
+        /* 결과 */
         .result-box {
             width: 100%;
             background: #fafafa;
@@ -132,38 +136,56 @@
         .bar-fill {
             height: 100%;
             border-radius: 8px;
-            transition: width 0.3s ease;
+            transition: width 0.6s ease;
         }
 
-        .bar-fill.dog  { background: linear-gradient(90deg, #f7971e, #ffd200); }
-        .bar-fill.cat  { background: linear-gradient(90deg, #a18cd1, #fbc2eb); }
+        .bar-fill.dog { background: linear-gradient(90deg, #f7971e, #ffd200); }
+        .bar-fill.cat { background: linear-gradient(90deg, #a18cd1, #fbc2eb); }
 
-        /* ── 결과 배너 ── */
+        /* 결과 배너 */
         .verdict {
             font-size: 22px;
             font-weight: 900;
-            padding: 14px 20px;
+            padding: 16px 20px;
             border-radius: 14px;
             width: 100%;
+            line-height: 1.5;
         }
 
-        .verdict.dog { background: #fff8e1; color: #e67e00; }
-        .verdict.cat { background: #f3e5f5; color: #7b1fa2; }
-        .verdict.none { background: #f5f5f5; color: #aaa; font-size: 16px; }
+        .verdict.dog  { background: #fff8e1; color: #e67e00; }
+        .verdict.cat  { background: #f3e5f5; color: #7b1fa2; }
+        .verdict.none { background: #f5f5f5; color: #aaa; font-size: 15px; }
 
-        .btn-stop {
-            background: #eee;
-            color: #777;
-            font-size: 14px;
+        /* 버튼들 */
+        .btn-retry {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            font-size: 15px;
             font-weight: bold;
-            padding: 10px 28px;
+            padding: 12px 36px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: background 0.2s;
+            box-shadow: 0 6px 20px rgba(255,107,107,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-stop:hover { background: #ddd; }
+        .btn-retry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(255,107,107,0.45);
+        }
+
+        /* 로딩 */
+        .loading {
+            font-size: 15px;
+            color: #aaa;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.4; }
+        }
 
         .notice {
             margin-top: 24px;
@@ -172,46 +194,60 @@
             text-align: center;
             line-height: 1.6;
         }
+
+        .back-link {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .back-link a {
+            color: #e67e00;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
+<div class="back-link"><a href="index.html">← 홈으로</a></div>
+
 <div class="hero">
     <div class="hero-emoji">🐾</div>
     <h1>동물상 테스트</h1>
-    <p>AI가 당신의 얼굴을 분석해<br>강아지상인지 고양이상인지 알아봐요!</p>
+    <p>사진을 업로드하면 AI가<br>강아지상인지 고양이상인지 알아봐요!</p>
 </div>
 
 <div class="card">
 
-    <!-- 시작 전 -->
-    <div id="startView">
-        <div class="animal-icons">🐶🐱</div>
-        <p class="start-desc">
-            카메라를 켜고 얼굴을 정면으로 향해주세요.<br>
-            AI가 실시간으로 당신의 동물상을 분석합니다.
-        </p>
-        <button class="btn-start" onclick="init()">📷 테스트 시작</button>
+    <!-- 업로드 영역 -->
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📁</div>
+        <div class="upload-label">사진을 업로드하세요</div>
+        <div class="upload-sub">클릭하거나 파일을 여기에 드래그하세요<br>JPG, PNG, WEBP 지원</div>
+        <input type="file" id="fileInput" accept="image/*">
     </div>
 
-    <!-- 분석 중 -->
-    <div id="analyzeView">
-        <div id="webcam-container"></div>
+    <!-- 결과 영역 -->
+    <div id="previewSection">
+        <img id="previewImg" src="" alt="업로드된 이미지">
 
         <div class="result-box">
             <div class="result-title">분석 결과</div>
-            <div class="bars" id="bars"></div>
+            <div id="loadingMsg" class="loading">🔍 AI가 분석 중입니다...</div>
+            <div class="bars" id="bars" style="display:none"></div>
         </div>
 
-        <div class="verdict none" id="verdict">분석 중...</div>
+        <div class="verdict none" id="verdict" style="display:none"></div>
 
-        <button class="btn-stop" onclick="stopWebcam()">⏹ 테스트 종료</button>
+        <button class="btn-retry" onclick="reset()">🔄 다시 테스트하기</button>
     </div>
 
 </div>
 
 <p class="notice">
-    웹캠 영상은 서버로 전송되지 않으며,<br>
+    업로드된 이미지는 서버로 전송되지 않으며,<br>
     브라우저 내에서만 처리됩니다.
 </p>
 
@@ -225,98 +261,116 @@
         "고양이": { key: "cat", emoji: "😺", text: "고양이상이에요!", desc: "시크하고 세련된 분위기를 가졌어요 ✨" },
     };
 
-    let model, webcam, running = false;
+    let model = null;
 
-    async function init() {
-        document.getElementById("startView").style.display = "none";
-        document.getElementById("analyzeView").style.display = "flex";
+    // 모델 사전 로드
+    (async () => {
+        model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+    })();
 
-        const modelURL    = MODEL_URL + "model.json";
-        const metadataURL = MODEL_URL + "metadata.json";
+    // 파일 선택
+    document.getElementById("fileInput").addEventListener("change", e => {
+        if (e.target.files[0]) handleFile(e.target.files[0]);
+    });
 
-        model = await tmImage.load(modelURL, metadataURL);
-        const classCount = model.getTotalClasses();
+    // 드래그 앤 드롭
+    const uploadArea = document.getElementById("uploadArea");
 
-        // 바 UI 생성
-        const barsEl = document.getElementById("bars");
-        barsEl.innerHTML = "";
-        for (let i = 0; i < classCount; i++) {
-            const row = document.createElement("div");
-            row.className = "bar-row";
-            row.innerHTML = `
-                <div class="bar-meta">
-                    <span class="bar-label-${i}"></span>
-                    <span class="bar-pct-${i}">0%</span>
-                </div>
-                <div class="bar-track">
-                    <div class="bar-fill bar-${i}" style="width:0%"></div>
-                </div>`;
-            barsEl.appendChild(row);
-        }
+    uploadArea.addEventListener("dragover", e => {
+        e.preventDefault();
+        uploadArea.classList.add("drag-over");
+    });
 
-        webcam = new tmImage.Webcam(280, 280, true);
-        await webcam.setup();
-        await webcam.play();
+    uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("drag-over"));
 
-        document.getElementById("webcam-container").appendChild(webcam.canvas);
-        running = true;
-        loop();
+    uploadArea.addEventListener("drop", e => {
+        e.preventDefault();
+        uploadArea.classList.remove("drag-over");
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) handleFile(file);
+    });
+
+    function handleFile(file) {
+        const reader = new FileReader();
+        reader.onload = async e => {
+            // 미리보기 표시
+            const img = document.getElementById("previewImg");
+            img.src = e.target.result;
+
+            document.getElementById("uploadArea").style.display = "none";
+            const previewSection = document.getElementById("previewSection");
+            previewSection.style.display = "flex";
+            document.getElementById("loadingMsg").style.display = "block";
+            document.getElementById("bars").style.display = "none";
+            document.getElementById("verdict").style.display = "none";
+
+            // 이미지 로드 완료 후 예측
+            img.onload = async () => {
+                if (!model) {
+                    model = await tmImage.load(MODEL_URL + "model.json", MODEL_URL + "metadata.json");
+                }
+                await predict(img);
+            };
+        };
+        reader.readAsDataURL(file);
     }
 
-    async function loop() {
-        if (!running) return;
-        webcam.update();
-        await predict();
-        requestAnimationFrame(loop);
-    }
-
-    async function predict() {
-        const predictions = await model.predict(webcam.canvas);
+    async function predict(imgEl) {
+        const predictions = await model.predict(imgEl);
 
         let topIdx = 0;
         predictions.forEach((p, i) => {
             if (p.probability > predictions[topIdx].probability) topIdx = i;
         });
 
+        // 바 렌더링
+        const barsEl = document.getElementById("bars");
+        barsEl.innerHTML = "";
+
         predictions.forEach((p, i) => {
             const pct  = (p.probability * 100).toFixed(1);
             const name = p.className;
             const meta = LABELS[name] || { key: "other", emoji: "🐾" };
 
-            const labelEl = document.querySelector(`.bar-label-${i}`);
-            const pctEl   = document.querySelector(`.bar-pct-${i}`);
-            const fillEl  = document.querySelector(`.bar-fill.bar-${i}`);
-
-            if (labelEl) labelEl.textContent = `${meta.emoji} ${name}`;
-            if (pctEl)   pctEl.textContent   = `${pct}%`;
-            if (fillEl) {
-                fillEl.style.width = `${pct}%`;
-                fillEl.className   = `bar-fill bar-${i} ${meta.key}`;
-            }
+            const row = document.createElement("div");
+            row.className = "bar-row";
+            row.innerHTML = `
+                <div class="bar-meta">
+                    <span>${meta.emoji} ${name}</span>
+                    <span>${pct}%</span>
+                </div>
+                <div class="bar-track">
+                    <div class="bar-fill ${meta.key}" style="width:0%" data-width="${pct}%"></div>
+                </div>`;
+            barsEl.appendChild(row);
         });
 
-        const top  = predictions[topIdx];
-        const conf = top.probability;
-        const meta = LABELS[top.className] || { key: "none", emoji: "🐾", text: "분석 중...", desc: "" };
-        const verdictEl = document.getElementById("verdict");
+        document.getElementById("loadingMsg").style.display = "none";
+        barsEl.style.display = "flex";
 
-        if (conf >= 0.6) {
-            verdictEl.className = `verdict ${meta.key}`;
-            verdictEl.innerHTML = `${meta.emoji} ${meta.text}<br><small style="font-size:14px;font-weight:normal">${meta.desc}</small>`;
-        } else {
-            verdictEl.className = "verdict none";
-            verdictEl.textContent = "🔍 얼굴을 카메라에 가까이 대주세요";
-        }
+        // 바 애니메이션
+        requestAnimationFrame(() => {
+            barsEl.querySelectorAll(".bar-fill").forEach(el => {
+                el.style.width = el.dataset.width;
+            });
+        });
+
+        // 결과 배너
+        const top  = predictions[topIdx];
+        const meta = LABELS[top.className] || { key: "none", emoji: "🐾", text: "판단 불가", desc: "" };
+        const verdictEl = document.getElementById("verdict");
+        verdictEl.style.display = "block";
+        verdictEl.className = `verdict ${meta.key}`;
+        verdictEl.innerHTML = `${meta.emoji} ${meta.text}<br><small style="font-size:14px;font-weight:normal">${meta.desc}</small>`;
     }
 
-    function stopWebcam() {
-        running = false;
-        if (webcam) webcam.stop();
-        document.getElementById("webcam-container").innerHTML = "";
-        document.getElementById("analyzeView").style.display = "none";
-        document.getElementById("startView").style.display   = "flex";
-        document.getElementById("verdict").className  = "verdict none";
-        document.getElementById("verdict").textContent = "분석 중...";
+    function reset() {
+        document.getElementById("fileInput").value = "";
+        document.getElementById("previewImg").src = "";
+        document.getElementById("previewSection").style.display = "none";
+        document.getElementById("uploadArea").style.display = "flex";
+        document.getElementById("bars").innerHTML = "";
+        document.getElementById("verdict").style.display = "none";
     }
 </script>
 </body>

@@ -221,12 +221,31 @@
             min-height: 18px;
             color: #667eea;
         }
+
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 22px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 14px rgba(255,107,107,0.35);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255,107,107,0.45);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <span class="toggle-label">다크모드</span>
         <button class="dark-toggle" onclick="toggleDark()" aria-label="다크모드 토글"></button>
+        <a class="nav-link" href="animal-test.html">🐾 동물상 테스트 하러 가기</a>
         <div class="title">🎰 로또 번호 생성기</div>
         <div class="lotto-numbers" id="lottoNumbers">
             <div class="number-ball">-</div>
