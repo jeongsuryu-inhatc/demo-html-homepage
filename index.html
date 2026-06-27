@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로또 번호 생성기</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-family: 'Arial', sans-serif;
+            transition: background 0.4s;
+        }
+        body.dark {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+        .container {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
+        body.dark .container {
+            background: #1e1e2e;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+        }
+        .dark-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 44px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.3s;
+        }
+        .dark-toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        body.dark .dark-toggle {
+            background: #667eea;
+        }
+        body.dark .dark-toggle::after {
+            transform: translateX(20px);
+        }
+        .toggle-label {
+            position: absolute;
+            top: 18px;
+            right: 65px;
+            font-size: 13px;
+            color: #888;
+            transition: color 0.4s;
+        }
+        body.dark .toggle-label {
+            color: #aaa;
+        }
+        .title {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 30px;
+            transition: color 0.4s;
+        }
+        body.dark .title {
+            color: #e0e0e0;
+        }
+        .lotto-numbers {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .number-ball {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        .reset-btn {
+            background: #e0e0e0;
+            color: #333;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.4s, color 0.4s;
+        }
+        body.dark .reset-btn {
+            background: #3a3a4e;
+            color: #ccc;
+        }
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        .info {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+            transition: color 0.4s;
+        }
+        body.dark .info {
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="toggle-label">다크모드</span>
+        <button class="dark-toggle" onclick="toggleDark()" aria-label="다크모드 토글"></button>
+        <div class="title">🎰 로또 번호 생성기</div>
+        <div class="lotto-numbers" id="lottoNumbers">
+            <div class="number-ball">-</div>
+            <div class="number-ball">-</div>
+            <div class="number-ball">-</div>
+            <div class="number-ball">-</div>
+            <div class="number-ball">-</div>
+            <div class="number-ball">-</div>
+        </div>
+        <div class="button-group">
+            <button class="generate-btn" onclick="generateLotto()">로또 번호 생성</button>
+            <button class="reset-btn" onclick="resetLotto()">초기화</button>
+        </div>
+        <div class="info">1부터 45까지의 숫자 중 중복 없이 6개를 선택합니다</div>
+    </div>
+
+    <script>
+        (function () {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark');
+            }
+        })();
+
+        function toggleDark() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        }
+
+        function generateLotto() {
+            const numbers = [];
+            while (numbers.length < 6) {
+                const num = Math.floor(Math.random() * 45) + 1;
+                if (!numbers.includes(num)) {
+                    numbers.push(num);
+                }
+            }
+            
+            // 번호를 오름차순으로 정렬
+            numbers.sort((a, b) => a - b);
+            
+            // DOM에 표시
+            const ballElements = document.querySelectorAll('.number-ball');
+            numbers.forEach((num, index) => {
+                ballElements[index].textContent = num;
+            });
+        }
+        
+        function resetLotto() {
+            const ballElements = document.querySelectorAll('.number-ball');
+            ballElements.forEach(ball => {
+                ball.textContent = '-';
+            });
+        }
+    </script>
+</body>
+</html>
